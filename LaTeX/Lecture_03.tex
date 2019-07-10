@@ -1,0 +1,160 @@
+% Lecture 3
+% Daniel Ellison 2019
+% LaTeX
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\part*{Lecture 3:\\Functions and Good Programming Practice}
+
+
+\section*{Functions}
+
+Suppose you're writing a program where you'd like to print out all text surrounded by hashtags, 
+
+\begin{verbatim}
+############
+#Like this.#
+############
+\end{verbatim}
+
+It would be a real pain to code in all the hashtags each time, but suppose we could extend the Python language to include the command \texttt{print\_with\_hashtags}, which given a string as input would print it with hashtags, like this:
+
+\begin{lstlisting}[numbers=none]
+>>> print_with_hashtags('asparagus')
+###########
+#asparagus#
+###########
+\end{lstlisting}
+
+Now of course, \texttt{print\_with\_hashtags} isn't part of the Python language, and your computer won't recognize it --- but you can add it in by \emph{defining a function}. Here's code to do it. 
+
+\begin{lstlisting}
+def print_with_hashtags(string_input):
+	line_1 = (len(string_input) + 2) * '#'
+	line_2 = '#' + string_input + '#'
+	line_3 = line_1
+	print(line_1)
+	print(line_2)
+	print(line_3)
+\end{lstlisting}
+
+with this new function defined in your program, you'd be free to use the\\ \texttt{print\_with\_hashtags} the command wherever you'd like. 
+
+Generally, a function has a name (following the same rules as variables) and takes in some number of inputs (called \emph{parameters}). You might just use a function for its effect (as in the printing effect of \texttt{print\_with\_hashtags}), but you can also have it return a value, which can then be assigned to a variable.
+
+For example, the following function takes in a number, doubles it and adds two, and then returns the result:
+
+\begin{lstlisting}
+def double_and_add_two(x):
+	return 2 * x + 2
+\end{lstlisting}
+
+we could then use the function later to assign the returned value to a variable as shown
+
+\begin{lstlisting}[numbers=none]
+>>> mystery_number = double_and_add_two(15)
+\end{lstlisting}
+
+\texttt{mystery\_number} is then assigned the value returned by \texttt{double\_and\_add\_two(15)}, which is of course \texttt{32}.
+
+Here are two more examples of functions. In this case, the first function is used as part of the second function:
+
+\begin{lstlisting}
+def check_prime(x):  # Checks if number x is prime. Returns True or False.
+	if x < 1:
+		return False
+	else:
+		for i in range(2, x):
+			if x % i== 0:
+				return False
+		return True
+
+def print_first_n_primes(n):
+	primes_found = 0
+	number_to_check = 2
+	while primes_found < n:
+		if check_prime(number_to_check) == True:
+			print(number_to_check)
+			primes_found += 1
+		number_to_check += 1
+\end{lstlisting}
+
+\begin{lstlisting}[numbers=none]
+>>> print_first_n_primes(5)
+2
+3
+5
+7
+11
+\end{lstlisting}
+
+As you can see, things are getting a bit more complicated. But notice that functions help to manage that complexity. Defining \texttt{check\_prime} as a separate function helps to make \texttt{print\_first\_n\_primes} easier to understand. Additionally, if you thought of a new way to check that if a number were prime, you could just modify the \texttt{check\_prime} function without having to touch \texttt{print\_first\_n\_primes}.
+
+
+\section*{Importing Functions: Libraries}
+
+Writing your own functions is one way to expand the language at your disposal. Another is by importing functions which \emph{other} people have written. You saw one example in lecture 1 where we imported the cos function from the math library.
+
+\begin{lstlisting}[numbers=none]
+>>> from math import cos
+\end{lstlisting}
+
+There are many other standard libraries besides \texttt{math}: a few are \texttt{os} (the operating system library) and \texttt{random} (the randomization library). You can even write your own library. Here's one:
+
+\begin{lstlisting}
+# Matt's String Library
+# Provides two commands to do fun things with strings
+def rotate_string(string_input,rotation_amount): 
+	# For example, a rotation of 'butterfly' by 2 gives 'lybutterfl', 
+	# and a rotation of 8 gives 'utterflyb'
+	string_output = ''
+	current_letter_index = (len(string_input) - rotation_amount) 
+						    % len(string_input)
+	for i in range(len(string_input)):
+		string_output += string_input[current_letter_index]
+		current_letter_index = (current_letter_index + 1) % len(string_input)
+	return string_output
+def print_word_box(string_input):
+	for i in range(len(string_input)):
+		print(rotate_string(string_input,i))
+\end{lstlisting}
+
+Suppose we save this library as \texttt{matt\_string\_lib.py}. Then in a new program \emph{(if the library is in the current folder)}, we could \texttt{import} the \texttt{print\_word\_box} function and use it:
+
+\begin{lstlisting}[numbers=none]
+>>> from matt_string_lib import print_word_box
+>>> print_word_box('cat')
+cat
+tca
+atc
+\end{lstlisting}
+
+\section*{Functions: a Philosophical Aside}
+
+What's the use of functions?
+If you read any academic paper or textbook, you'll typically find yourself confronted with technical language: take the beginning of the paper in which scientists reported their observation of gravitational waves:
+
+``In 1916, the year after the final formulation of the field equations of general relativity, Albert Einstein predicted the existence of gravitational waves. He found that the linearized weak-field equations had wave solutions: transverse waves of spatial strain that travel at the speed of light, generated by time variations of the mass quadrupole moment of the source. Einstein understood that gravitational-wave amplitudes would be remarkably small; moreover, until the Chapel Hill conference in 1957 there was significant debate about the physical reality of gravitational waves." (Abbot et al., 2016)
+
+What is the purpose of technical words such as `mass quadrupole moment' or `spatial strain'. Are they just there to confuse the reader at home? Couldn't the author have replaced such terms with their definitions in simpler language? The author *could* have done that, but it would make it harder for the author to express themself and the constant definitions would make it more confusing to grasp the idea and purpose of the text. It would be like writing a complex program without functions.
+
+Just as technical language helps scientists to express and reason about complex ideas, carefully chosen functions make it simpler to express complex operations and make your code more concise and understandable. The power of functions is to develop a specialized language to solve a programming challenge.
+
+
+\section*{Good Programming Practice}
+
+Functions are your key to designing and building more complex programs, but large programs come with all sorts of problems that are hard to appreciate without experience. Here are the big ones.
+
+\begin{enumerate}
+\item You might forget how part of your program works (or even what it's supposed to do)
+\item If running the program gives an error, it's hard to track down what caused the issue
+\item If someone else is trying to fix your program, they might be hopelessly lost
+\end{enumerate}
+
+So far our programs have been pretty small and it hasn't mattered too much if you always call your variables \texttt{var\_1} ,\texttt{var\_2}, \texttt{var\_3}, ..., but now is the time to start to think about writing programs which will stand the test of time (or at least be practice for programs which will stand the test of time). Different people have different ideas about good programming practice, here are a few that most everyone would agree with:
+
+\begin{enumerate}
+\item Begin by planning out your code (are there certain functions which would especially useful? does your problem break into smaller parts?)
+\item Use meaningful names for variables and functions
+\item If a function is longer than a few lines, write a comment to describe what parameters it takes in and what result it outputs
+\item If you write a clever piece of code which someone else might not understand, write a comment to explain it
+\end{enumerate}
