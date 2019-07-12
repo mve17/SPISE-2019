@@ -5,3 +5,5 @@ SPISE_CS_Notes.pdf contains the course information and lecture notes.
 
 Materials to accompany the lectures are in the numbered folders. These include lecture code (when longer than a few lines),
 the project sets, and files to accompany the project sets. Project set solutions will also be posted once the due date has passed.
+
+Thanks to Daniel Ellison for his LaTeX expertise and dedicated typesetting of course materials.
